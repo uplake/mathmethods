@@ -43,6 +43,7 @@ describe 'mathmethods', ->
     Math.PI.ceil.should.equal 4
     (3 * 0.4).ceil.should.equal 2
     (-6.9.ceil).should.equal -7 # don't do this!
+    (-6.9).ceil.should.equal -6 # don't do this!
 
   it 'adds "cos" property to Number.prototype', ->
     (2 * Math.PI).cos.should.equal 1
@@ -56,11 +57,24 @@ describe 'mathmethods', ->
     Math.PI.floor.should.equal 3
     (-4.1).floor.should.equal -5
     (-4.1.floor).should.equal -4 # don't do this!
+    (-4.1).floor.should.equal -5 # don't do this!
 
   it 'adds "log" property to Number.prototype', ->
     10.log.should.equal Math.log 10
     0.log.should.equal -Infinity
     (-1).log.should.be.NaN
+
+  it 'adds "log2" property to Number.prototype', ->
+    2.log2.should.equal 1
+    4.log2.should.equal 2
+    0.log2.should.equal -Infinity
+    (-1).log2.should.be.NaN
+
+  it 'adds "log10" property to Number.prototype', ->
+    10.log10.should.equal 1
+    100.log10.should.equal 2
+    0.log10.should.equal -Infinity
+    (-1).log10.should.be.NaN
 
   it 'adds "max" method to Number.prototype', ->
     0.max(3, -5, 4, -1).should.equal 4
@@ -125,3 +139,17 @@ describe 'mathmethods', ->
     5.fact.should.equal 120
     (try (-1).fact catch err then err).should.be.an.instanceof RangeError
     (try 3.75.fact catch err then err).should.be.an.instanceof TypeError
+
+  it 'adds "degrad" property to Number.prototype', ->
+    270.degrad.should.equal 1.5.pi
+    90.degrad.should.equal 0.5.pi
+    (-90).degrad.should.equal -0.5.pi
+
+  it 'adds "raddeg" property to Number.prototype', ->
+    2.pi.raddeg.should.equal 360
+    1.pi.raddeg.should.equal 180
+    0.raddeg.should.equal 0
+    (-0.5).pi.raddeg.should.equal -90
+
+  it 'adds "hypot" method to Number.prototype', ->
+    3.hypot(4).should.equal 5

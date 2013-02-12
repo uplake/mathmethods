@@ -52,4 +52,20 @@ for name in getters
 for name in methods
   addMethod name, fn if typeof (fn = Math[name]) is 'function'
 
-addMethod 'round', (nearest=1) -> Math.round(this/nearest)*nearest
+addGetter 'reciprocal', (me) -> 1/me 
+log2 = 2.log
+log10 = 10.log
+pi = Math.PI
+scgetters = {
+  log2: (me) -> me.log / log2 
+  log10: (me) -> me.log / log10
+  degrad: (me) -> me*pi/180
+  raddeg: (me) -> me*180/pi
+  pi: (me) -> me*pi
+}
+
+for name, fn of scgetters
+  addGetter name, fn 
+
+Number::round = (nearest=1) -> Math.round(this/nearest)*nearest
+Number::hypot = (y) -> (this.squared + y.squared).sqrt
