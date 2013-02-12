@@ -86,10 +86,14 @@ describe 'mathmethods', ->
     (-5).random.should.not.be.above 0
 
   it 'adds "round" property to Number.prototype', ->
-    20.49.round.should.equal 20
-    20.5.round.should.equal 21
-    (-20.5).round.should.equal -20
-    (-20.51).round.should.equal -21
+    20.49.round().should.equal 20
+    20.5.round().should.equal 21
+    (-20.5).round().should.equal -20
+    (-20.51).round().should.equal -21
+    20.49.round(0.1).should.equal 20.5
+    20.5.round(15).should.equal 15
+    (-20.5).round(2).should.equal -20
+    (-20.511).round(0.01).should.equal -20.51
 
   it 'adds "sin" property to Number.prototype', ->
     (Math.PI / 2).sin.should.equal 1

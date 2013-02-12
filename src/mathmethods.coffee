@@ -23,7 +23,7 @@ getters = [
   'floor'
   'log'
   'random'
-  'round'
+  # 'round'
   'sin'
   'sqrt'
   'tan'
@@ -51,3 +51,5 @@ for name in getters
 
 for name in methods
   addMethod name, fn if typeof (fn = Math[name]) is 'function'
+
+addMethod 'round', (nearest=1) -> Math.round(this/nearest)*nearest
