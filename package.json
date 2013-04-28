@@ -1,6 +1,6 @@
 {
-  "name": "mathmethods",
-  "version": "0.2.0",
+  "name": "moremathmethods",
+  "version": "0.2.1",
   "description": "Adds Math methods to Number.prototype as callable properties",
   "author": "David Chambers <dc@hashify.me>",
   "keywords": ["math", "number", "dsl"],
