@@ -2,14 +2,14 @@
   "name": "moremathmethods",
   "version": "0.2.1",
   "description": "Adds Math methods to Number.prototype as callable properties",
-  "author": "David Chambers <dc@hashify.me>",
+  "author": "Chad Kirby <ckirby@uplakemedia.com>",
   "keywords": ["math", "number", "dsl"],
   "main": "./lib/mathmethods",
   "repository": {
     "type": "git",
-    "url": "git://github.com/davidchambers/mathmethods.git"
+    "url": "git://github.com/uplake/moremathmethods.git"
   },
-  "bugs": "https://github.com/davidchambers/mathmethods/issues",
+  "bugs": "https://github.com/uplake/moremathmethods/issues",
   "devDependencies": {
     "coffee-script": "1.3.x",
     "mocha": "1.6.x",

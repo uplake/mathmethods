@@ -13,6 +13,9 @@ log2 = log 2
 log10 = log 10
 pi = Math.PI
 
+degradConstant = pi/180
+raddegConstant = 180/pi
+
 roundTo = (me, nearest=1) -> round(me/nearest)*nearest
 module.exports = {
   abs, acos, asin, atan, ceil, cos, exp, floor, log, sin, sqrt, tan, atan2, max, min, pow
@@ -21,8 +24,8 @@ module.exports = {
 
   log2: (me) -> log(me) / log2 
   log10: (me) -> log(me) / log10
-  degrad: (me) -> me*pi/180
-  raddeg: (me) -> me*180/pi
+  degrad: (me) -> me*degradConstant
+  raddeg: (me) -> me*raddegConstant
   pi: (me) -> me*pi
   reciprocal: (me) -> 1/me
   squared: (me) -> me * me
@@ -43,29 +46,49 @@ module.exports = {
   roundTo: roundTo
   round: roundTo
 
-  hypot: (me, y) -> (me*me + y*y).sqrt
+  hypot: (a, b) -> 
+    #(a*a + b*b).sqrt
+    if a is 0
+      abs b
+    else
+      abs(a) * sqrt(1 + pow(b/a, 2))
+
+  div: (me, denominator) -> (me/denominator) | 0 # integer division
 
   clip: (me, lo, hi) -> 
     switch
       when me < lo then lo
       when hi < me then hi
-      else 1*me
+      else +me
 
   exclusivelyBetween: (me, lo, hi) -> (lo < me) and (me < hi)
   inclusivelyBetween: (me, lo, hi) -> (lo <= me) and (me <= hi)
 
   nextPowerOf: (me, base) -> 
     return 1 if base is 1
-    pow( base, ceil(log(me) / log(base))) 
+    pow( base, ceil(log(me) / log(base)) ) 
+    
   previousPowerOf: (me, base) -> 
     return 1 if base is 1
-    pow( base, ceil(log(me) / log(base)) - 1) 
+    pow( base, ceil(log(me) / log(base)) - 1 ) 
 
   absdif: (me, that) -> (me - that).abs
   
-  fuzzyEqual: (me, that, precision=0.001) -> (1.0 - me.absdif(that)/precision).max(0) # return 0 or 1-absdif
+  fuzzyEqual: (me, that, precision=0.001) -> (1.0 - abs(me - that)/precision).max(0) # return 0 or 1-absdif
 
   frac: (me) -> me - (me | 0)
+
+  factors: (me) ->
+    n_factors = []
+    i = 1
+    while i <= Math.floor(Math.sqrt(me))
+      if me % i is 0
+        n_factors.push i
+        n_factors.push( me / i )  unless me / i is i
+      i++
+    n_factors.sort (a, b) -> # numeric sort
+      a - b
+    n_factors
 
   linlin: (me, inMin, inMax, outMin, outMax, clip='minmax') ->
     # linear to linear mapping
@@ -80,7 +103,7 @@ module.exports = {
   explin: (me, inMin, inMax, outMin, outMax, clip='minmax') ->
     # linear to exponential mapping
     mapClip(me, inMin, inMax, outMin, outMax, clip) ?
-    (log(me/inMin)) / (log(inMax/inMin)) * (outMax-outMin) + outMin
+    log(me/inMin) / log(inMax/inMin) * (outMax-outMin) + outMin
 
   expexp: (me, inMin, inMax, outMin, outMax, clip='minmax') ->
     # linear to exponential mapping
@@ -91,7 +114,7 @@ module.exports = {
     # linear to curve mapping
     clip = mapClip(me, inMin, inMax, outMin, outMax, clip)
     return clip if clip?
-    return me.linlin(inMin, inMax, outMin, outMax) if (abs(curve) < 0.001)
+    me.linlin(inMin, inMax, outMin, outMax) if (abs(curve) < 0.001)
 
     grow = exp(curve)
     a = (outMax - outMin) / (1 - grow)
@@ -103,7 +126,7 @@ module.exports = {
     # curve to linear mapping
     clip = mapClip(me, inMin, inMax, outMin, outMax, clip)
     return clip if clip?
-    return me.linlin(inMin, inMax, outMin, outMax) if (abs(curve) < 0.001)
+    me.linlin(inMin, inMax, outMin, outMax) if (abs(curve) < 0.001)
 
     grow = exp(curve)
     a = (outMax - outMin) / (1 - grow)
@@ -135,6 +158,14 @@ for name, fn of module.exports
   
 
 if require.main is module
- console.log  ((i/10).lincurve() for i in [0..10])
- console.log  ((i/10).lincurve().curvelin() for i in [0..10])
+  console.log  ((i/10).lincurve() for i in [0..10])
+  console.log  ((i/10).lincurve().curvelin() for i in [0..10])
+  # console.log fns
+  euc = (a,b) -> (a*a + b*b).sqrt
+  for x in [1..10]
+    for y in [1..10]
+      throw "Err #{x}, #{y}, #{x.hypot(y)}, #{euc(x,y)}" unless abs(x.hypot(y) - euc(x, y)) < 1e-10
+  console.log module.exports.hypot(1e155, 1e155+1), euc(1e155, 1e155+1), module.exports.hypot(1e155, 1e165) - euc(1e155, 1e165)
+
+
     
