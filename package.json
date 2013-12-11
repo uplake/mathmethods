@@ -1,6 +1,6 @@
 {
   "name": "moremathmethods",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Adds Math methods to Number.prototype as callable properties",
   "author": "Chad Kirby <ckirby@uplakemedia.com>",
   "keywords": ["math", "number", "dsl"],
